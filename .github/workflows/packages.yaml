@@ -3,10 +3,16 @@ name: Build Image and Push
 on:
   push:
     branches: ['main']
+    paths:
+      - 'Dockerfile'
+      - '.github/workflows/packages.yaml'
+      - 'app/pgvectors.sql'
   pull_request:
     branches: ['main']
-  release:
-    types: [published]
+    paths:
+      - 'Dockerfile'
+      - '.github/workflows/packages.yaml'
+      - 'app/pgvectors.sql'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -49,22 +55,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Determine version change
-        id: changed-version
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            Dockerfile
-            .github/workflows/packages.yaml
-            app/pgvectors.sql
-
       - name: Determine image push
         uses: actions/github-script@v7
         id: should-release
         with:
           script: |
             if (context.eventName == "pull_request") return false;
-            return "${{ steps.changed-version.outputs.any_changed }}" == "true";
+            return true;
 
       - name: Set Postgres Version
         id: version

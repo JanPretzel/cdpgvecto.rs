@@ -2,7 +2,7 @@ ARG ALPINE_VERSION=3.21.3
 ARG CRUNCHYDATA_VERSION
 ARG PG_MAJOR
 
-FROM alpine:${ALPINE_VERSION} as builder
+FROM alpine:${ALPINE_VERSION} AS builder
 
 RUN apk add --no-cache curl alien rpm binutils xz
 
